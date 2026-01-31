@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/promptsubmit/runner.py",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}

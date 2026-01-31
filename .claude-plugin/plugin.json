@@ -1,0 +1,23 @@
+{
+  "name": "skill-composer",
+  "version": "0.1.0",
+  "description": "Declarative prompt composition via hashtag modes. Like CSS for Claude.",
+  "author": "David Beyer",
+  "repository": "https://github.com/benegessarit/skill-composer",
+  "license": "MIT",
+  "skills": [
+    "skills/exec-opt",
+    "skills/mode-preflight",
+    "skills/mode-verify",
+    "skills/mode-clarify",
+    "skills/mode-compare",
+    "skills/mode-teach-me",
+    "skills/mode-research",
+    "skills/mode-trace",
+    "skills/mode-judge",
+    "skills/mode-handoff",
+    "skills/mode-question-light",
+    "skills/mode-question-heavy"
+  ],
+  "hooks": "hooks/hooks.json"
+}
