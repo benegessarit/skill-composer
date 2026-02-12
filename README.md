@@ -116,6 +116,29 @@ claude mcp add reasoning-mcp -- python -m reasoning_mcp
 
 Without reasoning-mcp installed, deep variants fall back to inline probing—still useful, just less rigorous.
 
+## Repository Structure
+
+```
+skill-composer/
+├── skills/                 # Skill definitions (copy to ~/.claude/skills/)
+│   ├── exec-opt/           # Execution optimizer with thinking tools + lenses
+│   ├── mode-*/             # Mode modifiers (#pref, #ver, etc.)
+│   └── ...
+├── hooks/                  # UserPromptSubmit hook for hashtag detection
+│   └── promptsubmit/       # Mode composition engine
+├── reasoning-mcp/          # MCP server for structured reasoning
+│   ├── src/reasoning_mcp/  # Server source
+│   └── tests/              # Test suite
+└── skills-system/          # Skills infrastructure reference implementation
+    ├── README.md           # Architecture deep dive
+    ├── hooks/              # Full hook pipeline (step tracking, enforcement)
+    ├── db/                 # SQLite skill tracking (life.db)
+    ├── utils/              # SkillRun output management
+    └── workers/            # Worker resume via --continue
+```
+
+The `skills-system/` directory documents and contains the infrastructure that *runs* skills — span-based tracking, step dependency enforcement, session resume, and output management. See [`skills-system/README.md`](skills-system/README.md) for the full architecture.
+
 ## Related Work
 
 Similar approaches exist:

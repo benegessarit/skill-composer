@@ -5,8 +5,10 @@ Push to extremes until something breaks. Find boundaries and failure modes.
 ## Injection Point
 phase-0 — Add stress-testing before finalizing
 
-## Trigger Keywords
-"edge case", "break", "limit", "extreme", "what if 10x", "worst case", "stress test", "boundary", "fail", "handle", "robust", "scale", "pressure"
+## When to use
+The task needs **boundary finding** — the solution must work at extremes, not just the happy path. Variables could be pushed to 10x, zero, or hostile conditions to find where things break.
+
+Do NOT use when the task is conceptual or theoretical. Stress-testing adds nothing to pure reasoning tasks.
 
 ## Phases to Add
 

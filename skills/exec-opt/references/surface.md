@@ -5,8 +5,10 @@ Make the implicit explicit. Find what you don't know you don't know.
 ## Injection Point
 phase-0 — Add surfacing phases BEFORE main analysis
 
-## Trigger Keywords
-"what am I missing", "am I missing something", "blind spots", "assumptions", "sanity check", "what am I not seeing", "obvious thing", "forgot", "overlooking", "haven't considered"
+## When to use
+The task needs **assumption surfacing** — hidden assumptions are likely load-bearing. The question takes things for granted that might be wrong, or pre-filters options before asking.
+
+Do NOT use when the assumptions are explicit and the framing is solid. Surfacing adds noise to well-framed questions.
 
 ## Phases to Add
 

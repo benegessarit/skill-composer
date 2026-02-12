@@ -5,8 +5,10 @@ Invert, negate, or reverse to reveal what straight-ahead thinking misses.
 ## Injection Point
 phase-0 — Add inversion before any recommendation phase
 
-## Trigger Keywords
-"what if", "opposite", "wrong", "bad idea", "shouldn't", "devil's advocate", "steelman", "premortem", "what could go wrong", "risks", "downsides", "argue against"
+## When to use
+The task needs **inversion** — straight-ahead thinking has an obvious answer that might be wrong. Flipping the question would expose blind spots, hidden risks, or unstated assumptions.
+
+Do NOT use when the task is analytical and the answer isn't biased by framing. Inversion adds nothing to pure analysis.
 
 ## Phases to Add
 

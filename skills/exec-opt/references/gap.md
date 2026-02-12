@@ -5,8 +5,10 @@ Find mismatches between things that should match. The verification primitive.
 ## Injection Point
 phase-0 — Add gap-detection phases to the optimized prompt
 
-## Trigger Keywords
-"verify", "check", "confirm", "validate", "compare", "audit", "match", "consistent", "double check", "make sure", "does this", "is this right"
+## When to use
+The task needs **verification** — comparing what IS against what SHOULD BE. Two things that should match: claim vs evidence, spec vs implementation, expectation vs reality.
+
+Do NOT use when the task is generative, not comparative.
 
 ## Phases to Add
 

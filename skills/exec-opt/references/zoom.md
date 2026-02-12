@@ -5,8 +5,10 @@ Change abstraction level—in for tractability, out for context.
 ## Injection Point
 phase-0 — Restructure prompt to operate at right altitude
 
-## Trigger Keywords
-"break down", "step by step", "decompose", "big picture", "zoom out", "context", "specifically", "concretely", "abstractly", "first principles", "simplify", "details", "overview"
+## When to use
+The task needs **altitude correction** — the question is either too abstract to act on (paralysis, no next step) or too concrete to see the system (lost in weeds, missing forest).
+
+Do NOT use when the question is already at the right altitude — concrete enough to act on, abstract enough to see context.
 
 ## Phases to Add
 

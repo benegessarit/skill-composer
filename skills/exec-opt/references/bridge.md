@@ -5,8 +5,10 @@ Connect to another domain where this problem is already solved.
 ## Injection Point
 phase-0 — Add analogical search before generating solutions
 
-## Trigger Keywords
-"like", "similar to", "analogy", "metaphor", "how did X solve", "pattern", "precedent", "who else faced", "in other fields", "what's this like", "compared to"
+## When to use
+The task needs **cross-domain import** — the problem is unfamiliar in its own domain but its SHAPE has been solved elsewhere. Importing a solution from another field would produce better results than domain-native thinking.
+
+Do NOT use when the problem is well-understood in its own domain. Analogy adds indirection without value.
 
 ## Phases to Add
 

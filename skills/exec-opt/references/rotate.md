@@ -5,8 +5,10 @@ View from a different angle—stakeholder, time, or frame.
 ## Injection Point
 phase-0 — Add perspective-shift before synthesis
 
-## Trigger Keywords
-"perspective", "point of view", "what would X think", "stakeholder", "in 5 years", "looking back", "if I were", "other side", "reframe", "different angle", "who else", "another way to see"
+## When to use
+The task needs **perspective shift** — multiple valid viewpoints exist and the answer depends on whose angle you take. Stakeholder differences, time horizons, or conceptual reframes would reveal blind spots.
+
+Do NOT use when the task has a single clear framing and perspective doesn't change the answer.
 
 ## Phases to Add
 

@@ -1,0 +1,309 @@
+{
+  "testModules": [
+    {
+      "moduleId": "Projects/skill-composer/reasoning-mcp/tests/test_integration.py",
+      "tests": [
+        {
+          "name": "test_full_ensemble_workflow",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_integration.py::test_full_ensemble_workflow",
+          "state": "passed"
+        },
+        {
+          "name": "test_workflow_with_multiple_invocations_per_agent",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_integration.py::test_workflow_with_multiple_invocations_per_agent",
+          "state": "passed"
+        },
+        {
+          "name": "test_invoke_blocked_after_synthesize",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_integration.py::test_invoke_blocked_after_synthesize",
+          "state": "passed"
+        },
+        {
+          "name": "test_perturb_blocked_after_synthesize",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_integration.py::test_perturb_blocked_after_synthesize",
+          "state": "passed"
+        }
+      ]
+    },
+    {
+      "moduleId": "Projects/skill-composer/reasoning-mcp/tests/test_server.py",
+      "tests": [
+        {
+          "name": "test_ensemble_returns_prompt_without_agents",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_returns_prompt_without_agents",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_creates_session_with_agents",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_creates_session_with_agents",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_rejects_too_few_agents",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_rejects_too_few_agents",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_rejects_missing_chaos_agent",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_rejects_missing_chaos_agent",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_allows_no_chaos_when_disabled",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_allows_no_chaos_when_disabled",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_accepts_native_dict",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_accepts_native_dict",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_accepts_native_list",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_accepts_native_list",
+          "state": "passed"
+        },
+        {
+          "name": "test_invoke_returns_prompt_without_response",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_invoke_returns_prompt_without_response",
+          "state": "passed"
+        },
+        {
+          "name": "test_invoke_registers_response",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_invoke_registers_response",
+          "state": "passed"
+        },
+        {
+          "name": "test_invoke_accepts_native_dict",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_invoke_accepts_native_dict",
+          "state": "passed"
+        },
+        {
+          "name": "test_invoke_rejects_unknown_agent",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_invoke_rejects_unknown_agent",
+          "state": "passed"
+        },
+        {
+          "name": "test_invoke_tracks_unique_agents",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_invoke_tracks_unique_agents",
+          "state": "passed"
+        },
+        {
+          "name": "test_invoke_session_not_found",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_invoke_session_not_found",
+          "state": "passed"
+        },
+        {
+          "name": "test_perturb_returns_prompt_without_result",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_perturb_returns_prompt_without_result",
+          "state": "passed"
+        },
+        {
+          "name": "test_perturb_registers_result",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_perturb_registers_result",
+          "state": "passed"
+        },
+        {
+          "name": "test_perturb_validates_impact",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_perturb_validates_impact",
+          "state": "passed"
+        },
+        {
+          "name": "test_synthesize_blocked_until_min_agents",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_synthesize_blocked_until_min_agents",
+          "state": "passed"
+        },
+        {
+          "name": "test_synthesize_returns_prompt_when_ready",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_synthesize_returns_prompt_when_ready",
+          "state": "passed"
+        },
+        {
+          "name": "test_synthesize_completes_session",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_synthesize_completes_session",
+          "state": "passed"
+        },
+        {
+          "name": "test_synthesize_blocks_after_completion",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_synthesize_blocks_after_completion",
+          "state": "passed"
+        },
+        {
+          "name": "test_get_session_state",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_get_session_state",
+          "state": "passed"
+        },
+        {
+          "name": "test_get_session_state_not_found",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_get_session_state_not_found",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_rejects_missing_orchestrator",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_rejects_missing_orchestrator",
+          "state": "passed"
+        },
+        {
+          "name": "test_ensemble_allows_no_orchestrator_when_disabled",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_ensemble_allows_no_orchestrator_when_disabled",
+          "state": "passed"
+        },
+        {
+          "name": "test_orchestrator_gets_special_prompt",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_orchestrator_gets_special_prompt",
+          "state": "passed"
+        },
+        {
+          "name": "test_orchestrator_prompt_includes_context",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_orchestrator_prompt_includes_context",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_returns_template_xml_phases",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_returns_template_xml_phases",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_returns_template_flow_phases",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_returns_template_flow_phases",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_handles_no_phases",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_handles_no_phases",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_validates_valid_plan",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_validates_valid_plan",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_rejects_phase_count_mismatch",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_rejects_phase_count_mismatch",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_rejects_duplicate_weights",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_rejects_duplicate_weights",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_rejects_insufficient_spread",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_rejects_insufficient_spread",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_rejects_wrong_weight_sum",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_rejects_wrong_weight_sum",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_auto_calculates_depth",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_auto_calculates_depth",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_rejects_generic_produces",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_rejects_generic_produces",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_rejects_missing_field",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_rejects_missing_field",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_rejects_empty_phases",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_rejects_empty_phases",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_accepts_native_dict",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_accepts_native_dict",
+          "state": "passed"
+        },
+        {
+          "name": "test_plan_prompt_skips_count_check_when_no_phases_detected",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_plan_prompt_skips_count_check_when_no_phases_detected",
+          "state": "passed"
+        },
+        {
+          "name": "test_audit_probe_rejects_same_frames",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_audit_probe_rejects_same_frames",
+          "state": "passed"
+        },
+        {
+          "name": "test_audit_probe_rejects_same_frames_case_insensitive",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_audit_probe_rejects_same_frames_case_insensitive",
+          "state": "passed"
+        },
+        {
+          "name": "test_audit_probe_rejects_missing_field",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_audit_probe_rejects_missing_field",
+          "state": "passed"
+        },
+        {
+          "name": "test_audit_probe_validates_valid_result",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_audit_probe_validates_valid_result",
+          "state": "passed"
+        },
+        {
+          "name": "test_audit_probe_accepts_native_dict",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_audit_probe_accepts_native_dict",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_returns_prompt_without_result",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_returns_prompt_without_result",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_validates_valid_result",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_validates_valid_result",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_rejects_too_few_blind_spots",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_rejects_too_few_blind_spots",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_rejects_duplicate_blind_spots",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_rejects_duplicate_blind_spots",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_rejects_invalid_decision",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_rejects_invalid_decision",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_rejects_invalid_blind_spot_type",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_rejects_invalid_blind_spot_type",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_rejects_disconnected_tension",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_rejects_disconnected_tension",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_rejects_missing_field",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_rejects_missing_field",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_accepts_string_result",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_accepts_string_result",
+          "state": "passed"
+        },
+        {
+          "name": "test_surface_rejects_blind_spot_missing_what",
+          "fullName": "Projects/skill-composer/reasoning-mcp/tests/test_server.py::test_surface_rejects_blind_spot_missing_what",
+          "state": "passed"
+        }
+      ]
+    }
+  ]
+}
