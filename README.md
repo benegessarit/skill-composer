@@ -45,6 +45,7 @@ claude plugins install github:benegessarit/skill-composer
 | `#teach` | teach-me | Socratic teaching. Build understanding, don't dump info. |
 | `#research` | research | Two-phase: survey landscape, then deep-dive on what matters. |
 | `#trace` | trace | Follow execution paths through code. |
+| `#judge` | judge | Honest evaluation without cheerleading. |
 
 ### Context Modes (HOW to think)
 
@@ -96,15 +97,16 @@ This runs:
 
 ## Optional: Reasoning MCP
 
-The `*` deep variants (e.g., `#pref*`) can use [reasoning-mcp](https://github.com/benegessarit/reasoning-mcp) for metacognitive depth probing. It's loosely coupled—skill-composer works fine without it, but the MCP adds structure when you want Claude to really slow down.
+The `*` deep variants (e.g., `#pref*`) use [reasoning-mcp](https://github.com/benegessarit/reasoning-mcp) for metacognitive depth probing. Skill-composer works fine without it, but the MCP adds structure when you want Claude to really slow down.
 
-What reasoning-mcp does:
+What reasoning-mcp provides:
 
-- **depth_probe**: Forces Claude to audit its reasoning before starting ("where will my analysis be shallow?")
-- **ensemble**: Claude generates personas for the question, then role-plays each in separate turns (enforced—can't collapse into one response)
-- **chaos agent**: Stress-tests assumptions via perturbation (what if we negate this? remove it? take it to extreme?)
-- **orchestrator**: Watches the discussion and pushes for depth when it's getting superficial
-- **forced synthesis**: Tracks dissent and requires explicit conclusion
+- **depth_probe**: Audit reasoning before starting — where will analysis be shallow?
+- **ensemble**: Generate personas, role-play each in separate turns, with chaos agents and orchestrators
+- **perturb**: Stress-test assumptions via chaos engineering (negate, remove, extreme, opposite)
+- **synthesize**: Forced multi-perspective synthesis with dissent tracking
+- **plan_prompt**: Weighted execution budgets — allocate 100 points across phases, forcing real trade-offs
+- **pause / surface / audit_probe**: Mid-execution cognitive checkpoints
 
 ```bash
 # Install reasoning-mcp
@@ -122,22 +124,34 @@ Without reasoning-mcp installed, deep variants fall back to inline probing—sti
 skill-composer/
 ├── skills/                 # Skill definitions (copy to ~/.claude/skills/)
 │   ├── exec-opt/           # Execution optimizer with thinking tools + lenses
-│   ├── mode-*/             # Mode modifiers (#pref, #ver, etc.)
-│   └── ...
+│   │   ├── SKILL.md        # Core skill definition
+│   │   ├── steps/          # Step files with consumes/produces frontmatter
+│   │   └── references/     # Thinking tool + lens reference files
+│   └── mode-*/             # Mode modifiers (#pref, #ver, #clar, etc.)
 ├── hooks/                  # UserPromptSubmit hook for hashtag detection
-│   └── promptsubmit/       # Mode composition engine
+│   ├── hooks.json          # Hook registration
+│   └── promptsubmit/       # Mode composition engine (prompt_optimizer.py)
 ├── reasoning-mcp/          # MCP server for structured reasoning
-│   ├── src/reasoning_mcp/  # Server source
-│   └── tests/              # Test suite
-└── skills-system/          # Skills infrastructure reference implementation
-    ├── README.md           # Architecture deep dive
+│   ├── src/reasoning_mcp/  # Server: ensemble, invoke, perturb, synthesize,
+│   │                       #   depth_probe, plan_prompt, pause, surface, audit_probe
+│   ├── tests/              # Test suite (59 tests)
+│   └── pyproject.toml      # Dependencies: mcp>=1.0.0
+└── skills-system/          # Skills infrastructure (reference implementation)
+    ├── db/                 # SQLite skill tracking (open_db context manager)
     ├── hooks/              # Full hook pipeline (step tracking, enforcement)
-    ├── db/                 # SQLite skill tracking (life.db)
     ├── utils/              # SkillRun output management
     └── workers/            # Worker resume via --continue
 ```
 
-The `skills-system/` directory documents and contains the infrastructure that *runs* skills — span-based tracking, step dependency enforcement, session resume, and output management. See [`skills-system/README.md`](skills-system/README.md) for the full architecture.
+### Component Independence
+
+| Component | Standalone? | Dependencies |
+|-----------|------------|--------------|
+| `skills/` + `hooks/` | Yes | None — copy skills and hook, works immediately |
+| `reasoning-mcp/` | Yes | `mcp>=1.0.0` only |
+| `skills-system/` | Reference | Shows how to build span tracking, step enforcement, output management |
+
+The `skills/` and `hooks/` directories are all you need. `reasoning-mcp` adds depth probing. `skills-system` is a reference implementation showing how to build infrastructure around skills.
 
 ## Related Work
 

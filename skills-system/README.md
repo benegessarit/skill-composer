@@ -2,45 +2,47 @@
 
 How skills are tracked, enforced, and resumed across Claude Code sessions.
 
-## Two-Database Architecture
+## Database
 
-| Database | Location | Purpose |
-|----------|----------|---------|
-| `life.db` | `~/life/life.db` | Skill tracking, life events, invocations |
-| `formaltask.db` | `PROJECT_ROOT/.claude/formaltask.db` | Task management, worker state |
+SQLite with WAL mode, stored at `~/life/life.db`. Connection via `open_db()` context manager — guarantees close even on exceptions:
 
-The skills system lives in `life.db`. FormalTask workers use `formaltask.db` for task state but `life.db` for skill tracking.
+```python
+from db.connection import open_db
 
-## Core Tables (life.db)
+with open_db() as db:
+    row = db.execute("SELECT ...").fetchone()
+    db.commit()
+```
+
+Schema auto-creates on first connection per process.
 
 ### skill_span — Per-invocation execution tracking
 
 ```sql
-CREATE TABLE skill_span (
+CREATE TABLE IF NOT EXISTS skill_span (
     span_id TEXT PRIMARY KEY,
     skill TEXT NOT NULL,
-    parent_span_id TEXT,          -- Composition: skill A invokes skill B
-    status TEXT NOT NULL DEFAULT 'active',  -- active | suspended | completed
+    parent_span_id TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
     first_step TEXT,
     last_step TEXT,
-    steps TEXT DEFAULT '[]',      -- JSON array of visited step names
+    steps TEXT DEFAULT '[]',
+    session_id TEXT,
     started_at TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
-    suspended_at TEXT,
     completed_at TEXT,
-    session_id TEXT,              -- Scopes span to one Claude session
-    FOREIGN KEY (parent_span_id) REFERENCES skill_span(span_id)
+    suspended_at TEXT
 );
 ```
 
 ### life_event — Append-only event ledger
 
 ```sql
-CREATE TABLE life_event (
+CREATE TABLE IF NOT EXISTS life_event (
     id TEXT PRIMARY KEY,
-    timestamp TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+    timestamp TEXT NOT NULL,
     skill TEXT NOT NULL,
     phase TEXT DEFAULT '',
-    event_type TEXT DEFAULT 'phase_enter',  -- step_enter | session_start | session_end | subagent_step_delegate
+    event_type TEXT DEFAULT 'phase_enter',
     session_id TEXT DEFAULT '',
     payload TEXT DEFAULT ''
 );
@@ -80,6 +82,7 @@ USER INVOKES /daily-planner
 │   • Queries skill_span.steps for visited steps               │
 │   • BLOCKS read if consumed artifacts not yet produced       │
 │   • ROOT_INPUTS ("user-request") always satisfied            │
+│   • No active span = not invoking = allow (editing safe)     │
 │   • Fail-open on errors                                      │
 └─────────────────────────────────────────────────────────────┘
         │
@@ -88,9 +91,9 @@ USER INVOKES /daily-planner
 ┌─────────────────────────────────────────────────────────────┐
 │ PostToolUse: step_logger.py (TRACKING)                       │
 │   • Intercepts Read of */skills/*/steps/*.md AND */SKILL.md  │
-│   • 3-branch span algorithm:                                 │
+│   • 3-branch span algorithm (under EXCLUSIVE lock):          │
 │     1. Active span exists → append step                      │
-│     2. Suspended root span → resume + append                 │
+│     2. Suspended span → resume + append                      │
 │     3. Neither → create new span                             │
 │   • Detects skill switches (A→B), suspends A, creates B     │
 │   • Parent span = composition signal (B.parent → A)          │
@@ -102,8 +105,9 @@ USER INVOKES /daily-planner
         │
 ┌─────────────────────────────────────────────────────────────┐
 │ SessionEnd: close_active_skill_session                        │
-│   • Completes all active spans for this session_id           │
-│   • Emits session_end event for still-open skills            │
+│   • Early-returns if no session_id (prevents global UPDATE)  │
+│   • Completes both active AND suspended spans                │
+│   • Emits session_end event for most recent open skill       │
 │   • Prevents cross-session bleed                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -132,11 +136,12 @@ produces: [depth-probe]
 ```
 
 The `step_gate.py` hook:
-1. Parses ALL step files for a skill on first access
+1. Parses ALL step files for a skill on first access (cached per-process)
 2. Builds `produces_map` (artifact → step) and `consumes_map` (step → [artifacts])
 3. On each step read, checks if all consumed artifacts have been produced by visited steps
 4. `optional: true` steps can be skipped without breaking the chain
 5. `ROOT_INPUTS` (like "user-request") are always satisfied
+6. No active span for this skill = not invoking it (editing, browsing) — always allows
 
 ## Span State Machine
 
@@ -148,13 +153,13 @@ The `step_gate.py` hook:
          suspend   │    │  resume (re-read SKILL.md)
                    ▼    │
                 ┌──────────┐
-                │ suspended │
+                │ suspended │  ──→ completed (session end)
                 └──────────┘
 ```
 
 - **active**: Skill is currently executing. Steps get appended.
-- **suspended**: Another skill took over. Will resume when this skill's SKILL.md is read again.
-- **completed**: Session ended. Terminal state.
+- **suspended**: Another skill took over. Resumes when this skill's SKILL.md or step is read again.
+- **completed**: Session ended or explicitly closed. Terminal state. Both active and suspended spans complete on session end.
 - All queries scoped by `session_id` — no cross-session interference.
 
 ## SkillRun (Output Management)
@@ -186,8 +191,12 @@ Hashtag-triggered modes compose with skills:
 | `#comp` | compare | mode-compare |
 | `#teach` | teach-me | mode-teach-me |
 | `#research` | research | mode-research |
+| `#trace` | trace | mode-trace |
+| `#judge` | judge | mode-judge |
 | `#qlight` | question-light | mode-question-light (context) |
 | `#qheavy` | question-heavy | mode-question-heavy (context) |
+
+**Deep variants**: Append `*` (e.g., `#pref*`) for depth_probe integration.
 
 **Quick mode**: `/skill -` → follows `quick:` instructions, skips `(full only)` phases.
 
@@ -204,14 +213,20 @@ Workers can be resumed across sessions using `claude --continue`:
 
 Key detail: Task list state is lost on `--continue`. Resume message warns Claude not to recreate tasks.
 
+Note: Worker resume depends on the `formaltask` package (not included in this repo).
+
 ## File Inventory
 
 ```
 skills-system/
-├── README.md                              # This file
+├── README.md
+├── db/
+│   ├── connection.py                      # open_db() context manager, WAL, auto-schema
+│   ├── event.py                           # emit_event + query helpers
+│   └── models.py                          # LifeEvent Pydantic model
 ├── hooks/
 │   ├── promptsubmit/
-│   │   ├── runner.py                      # Entry point
+│   │   ├── runner.py                      # Entry point (stdin JSON → phases → stdout)
 │   │   ├── phases/__init__.py             # Phase ordering
 │   │   ├── phases/skill_run_initializer.py
 │   │   ├── phases/prompt_optimizer.py
@@ -222,25 +237,22 @@ skills-system/
 │   │   ├── phases/skill_todo_validator.py
 │   │   └── phases/subagent_step_tracker.py
 │   ├── posttool/
-│   │   └── phases/step_logger.py          # Span tracking
+│   │   └── phases/step_logger.py          # Span tracking (EXCLUSIVE lock)
 │   ├── session_end/
 │   │   └── phases/__init__.py             # close_active_skill_session
 │   └── pre_compact/
 │       └── skill_queue_flush.py
-├── db/
-│   ├── connection.py                      # life.db WAL connection
-│   ├── event.py                           # emit_event + query helpers
-│   └── models.py                          # LifeEvent Pydantic model
 ├── utils/
 │   └── skill_output.py                    # SkillRun + write_skill_report
-└── workers/
-    └── resume.py                          # Worker resume via --continue
+├── workers/
+│   └── resume.py                          # Worker resume via --continue (requires formaltask)
+└── test_spans_live.py                     # Integration test: 40 assertions across 10 scenarios
 ```
 
 ## Dependencies
 
 - Python 3.11
 - SQLite 3 (WAL mode)
-- pydantic (models)
-- pyyaml (frontmatter parsing)
-- tmux 3.2+ (worker resume with `-e` flag)
+- pydantic (LifeEvent model)
+- pyyaml (step frontmatter parsing)
+- openai (skill_queue_flush LLM calls — optional, graceful degradation without API key)
