@@ -13,16 +13,6 @@ class Agent:
     is_chaos: bool = False
     is_orchestrator: bool = False
 
-    def to_dict(self) -> dict:
-        return {
-            "name": self.name,
-            "role": self.role,
-            "purpose": self.purpose,
-            "perspective": self.perspective,
-            "is_chaos": self.is_chaos,
-            "is_orchestrator": self.is_orchestrator,
-        }
-
 
 @dataclass
 class Invocation:

@@ -48,10 +48,6 @@ def get_current_session_id() -> str | None:
     return _read_session_field("session_id")
 
 
-def get_current_transcript_path() -> str | None:
-    return _read_session_field("transcript_path")
-
-
 def _slugify(title: str) -> str:
     """Convert title to URL-safe slug."""
     return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
@@ -133,8 +129,6 @@ class SkillRun:
         >>> run = SkillRun.create("critiquing-exhaustively", "Review auth module")
         >>> run.write_context("# Context\\nAnalyzing auth module...")
         >>> run.write_handoff("skeptic", "# Skeptic Handoff\\n...")
-        >>> run.write_handoff("gap-finder", "# Gap Finder Handoff\\n...")
-        >>> # Spawn subagents that write to run.outputs
         >>> run.write_synthesis("# Synthesis\\n...")
         >>> run.publish_report()  # Copies synthesis to reports/
     """
@@ -235,19 +229,6 @@ class SkillRun:
         """Path to run log file."""
         return self.dir / "run.log"
 
-    def write_log(self, message: str, phase: str | None = None) -> None:
-        """Append timestamped entry to run log.
-
-        Args:
-            message: Log message
-            phase: Optional phase identifier (e.g., "Phase 1", "Verification")
-        """
-        timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
-        phase_prefix = f"[{phase}] " if phase else ""
-        entry = f"[{timestamp}] {phase_prefix}{message}\n"
-        with self.log.open("a") as f:
-            f.write(entry)
-
     @property
     def reports_dir(self) -> Path:
         """Path to reports directory for this skill."""
@@ -263,18 +244,6 @@ class SkillRun:
         path = self.handoffs / f"{_slugify(persona)}.md"
         path.write_text(content)
         return path
-
-    def read_output(self, persona: str) -> str | None:
-        """Read output from a specific persona (returns None if not exists)."""
-        path = self.outputs / f"{_slugify(persona)}.md"
-        return path.read_text() if path.exists() else None
-
-    def read_all_outputs(self) -> dict[str, str]:
-        """Read all persona outputs as {persona_slug: content}."""
-        outputs = {}
-        for path in self.outputs.glob("*.md"):
-            outputs[path.stem] = path.read_text()
-        return outputs
 
     def write_synthesis(self, content: str) -> Path:
         """Write final synthesis combining all persona outputs."""
@@ -295,70 +264,3 @@ class SkillRun:
         report_path = self.reports_dir / f"{self.dir.name}.md"
         report_path.write_text(report_content)
         return report_path
-
-    @classmethod
-    def list_runs(cls, skill: str, limit: int = 10) -> list[dict]:
-        """List previous runs for a skill, most recent first.
-
-        Args:
-            skill: Skill name (e.g., 'hunting-dead-code')
-            limit: Maximum number of runs to return
-
-        Returns:
-            List of dicts with keys: name, date, path, has_synthesis
-        """
-        project = _detect_project()
-        runs_dir = _skill_base_dir(skill, project) / "runs"
-        if not runs_dir.exists():
-            return []
-
-        runs = []
-        for run_path in sorted(runs_dir.iterdir(), reverse=True):
-            if not run_path.is_dir():
-                continue
-            # Parse date from directory name (YYYY-MM-DD-slug)
-            name = run_path.name
-            date_match = re.match(r"(\d{4}-\d{2}-\d{2})", name)
-            date_str = date_match.group(1) if date_match else "unknown"
-
-            runs.append(
-                {
-                    "name": name,
-                    "date": date_str,
-                    "path": run_path,
-                    "has_synthesis": (run_path / "synthesis.md").exists(),
-                }
-            )
-            if len(runs) >= limit:
-                break
-
-        return runs
-
-    @classmethod
-    def format_history(cls, skill: str, limit: int = 10) -> str:
-        """Format run history as a markdown table for display.
-
-        Args:
-            skill: Skill name
-            limit: Maximum runs to show
-
-        Returns:
-            Markdown-formatted history table, or message if no runs
-        """
-        runs = cls.list_runs(skill, limit)
-        if not runs:
-            return f"No previous runs found for `{skill}`."
-
-        lines = [
-            f"## Previous Runs ({skill})",
-            "",
-            "| Date | Run | Status |",
-            "|------|-----|--------|",
-        ]
-        for run in runs:
-            status = "✓ Complete" if run["has_synthesis"] else "⋯ In Progress"
-            lines.append(f"| {run['date']} | {run['name']} | {status} |")
-
-        lines.append("")
-        lines.append(f"*Showing {len(runs)} most recent runs*")
-        return "\n".join(lines)

@@ -10,6 +10,8 @@ from typing import Literal
 
 from mcp.server.fastmcp import FastMCP
 
+from dataclasses import asdict
+
 from reasoning_mcp.models import Agent, Invocation, Perturbation, Session
 from reasoning_mcp.prompts import (
     CHAOS_INSTRUCTION,
@@ -229,7 +231,7 @@ async def ensemble(
 
     return _json({
         "session_id": session_id,
-        "agents": [a.to_dict() for a in parsed_agents],
+        "agents": [asdict(a) for a in parsed_agents],
         "suggested_order": [a.name for a in parsed_agents],
         "chaos_agent": chaos_agent,
         "orchestrator_agent": orchestrator_agent,
@@ -309,7 +311,7 @@ async def invoke(
 
         return _json({
             "action": "role_play" if not agent_obj.is_orchestrator else "orchestrate",
-            "agent": agent_obj.to_dict(),
+            "agent": asdict(agent_obj),
             "prompt": prompt,
             "invocations_so_far": len(session.invocations),
             "next_step": f"Role-play as {agent}, then call invoke again with 'response' parameter containing JSON",
@@ -555,7 +557,7 @@ async def get_session_state(session_id: str) -> str:
     return _json({
         "session_id": session_id,
         "question": session.question,
-        "agents": [a.to_dict() for a in session.agents],
+        "agents": [asdict(a) for a in session.agents],
         "invocations": [
             {"agent": i.agent, "raises": i.raises, "suggests_next": i.suggests_next}
             for i in session.invocations

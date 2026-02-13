@@ -24,20 +24,6 @@ log = logging.getLogger(__name__)
 # Time to wait for Claude to start before checking pane health
 PANE_STARTUP_WAIT_SECONDS = 10.0
 
-__all__ = [
-    "WorkerResumeError",
-    "WorktreeNotFoundError",
-    "SessionExpiredError",
-    "InvalidSessionIdError",
-    "TmuxSpawnError",
-    "find_worktree",
-    "read_and_validate_session_id",
-    "worktree_to_project_path",
-    "verify_session_exists",
-    "resume_worker_in_tmux",
-]
-
-
 class WorkerResumeError(Exception):
     """Base exception for worker resume operations."""
 

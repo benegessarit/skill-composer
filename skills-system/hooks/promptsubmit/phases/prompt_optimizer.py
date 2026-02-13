@@ -27,6 +27,9 @@ ACTION_MODES = {
     "compare": (r"#comp", "mode-compare", True),
     "teach_me": (r"#teach", "mode-teach-me", True),
     "research": (r"#research", "mode-research", True),
+    "trace": (r"#trace", "mode-trace", True),
+    "judge": (r"#judge", "mode-judge", True),
+    "handoff": (r"#handoff", "mode-handoff", True),
 }
 
 # === CONTEXT MODE DEFINITIONS ===

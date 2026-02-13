@@ -35,6 +35,9 @@ ACTION_MODES = {
     "compare": (r"#comp(?!\*)", "mode-compare", False),
     "teach_me": (r"#teach(?!\*)", "mode-teach-me", False),
     "research": (r"#research(?!\*)", "mode-research", False),
+    "trace": (r"#trace(?!\*)", "mode-trace", False),
+    "judge": (r"#judge(?!\*)", "mode-judge", False),
+    "handoff": (r"#handoff(?!\*)", "mode-handoff", False),
     # Deep modes (with depth_probe)
     "preflight_deep": (r"#pref\*", "mode-preflight", True),
     "verify_deep": (r"#ver\*", "mode-verify", True),
@@ -42,6 +45,9 @@ ACTION_MODES = {
     "compare_deep": (r"#comp\*", "mode-compare", True),
     "teach_me_deep": (r"#teach\*", "mode-teach-me", True),
     "research_deep": (r"#research\*", "mode-research", True),
+    "trace_deep": (r"#trace\*", "mode-trace", True),
+    "judge_deep": (r"#judge\*", "mode-judge", True),
+    "handoff_deep": (r"#handoff\*", "mode-handoff", True),
 }
 
 # === CONTEXT MODE DEFINITIONS ===

@@ -8,6 +8,9 @@ dependencies = [
     "mcp>=1.0.0",
 ]
 
+[project.optional-dependencies]
+test = ["pytest", "pytest-asyncio"]
+
 [project.scripts]
 reasoning-mcp = "reasoning_mcp.__main__:main"
 

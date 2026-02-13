@@ -25,8 +25,24 @@ The stacking idea comes from CSS (classes compose) and Unix pipes (small tools c
 ## Quick Start
 
 ```bash
-# Install the plugin
-claude plugins install github:benegessarit/skill-composer
+# Clone the repo
+git clone https://github.com/benegessarit/skill-composer.git
+
+# Copy skills to Claude Code
+cp -r skill-composer/skills/* ~/.claude/skills/
+
+# Add the hook to your project's .claude/settings.json
+cat <<'EOF' >> .claude/settings.json
+{
+  "hooks": {
+    "UserPromptSubmit": [{
+      "type": "command",
+      "command": "python3 /path/to/skill-composer/hooks/promptsubmit/runner.py",
+      "timeout": 5000
+    }]
+  }
+}
+EOF
 
 # Use it
 #pref Should I use Redis or Postgres for this cache?
@@ -46,6 +62,7 @@ claude plugins install github:benegessarit/skill-composer
 | `#research` | research | Two-phase: survey landscape, then deep-dive on what matters. |
 | `#trace` | trace | Follow execution paths through code. |
 | `#judge` | judge | Honest evaluation without cheerleading. |
+| `#handoff` | handoff | Save comprehensive context for future sessions. |
 
 ### Context Modes (HOW to think)
 
@@ -130,7 +147,8 @@ skill-composer/
 │   └── mode-*/             # Mode modifiers (#pref, #ver, #clar, etc.)
 ├── hooks/                  # UserPromptSubmit hook for hashtag detection
 │   ├── hooks.json          # Hook registration
-│   └── promptsubmit/       # Mode composition engine (prompt_optimizer.py)
+│   └── promptsubmit/       # Mode composition engine
+│       └── phases/prompt_optimizer.py
 ├── reasoning-mcp/          # MCP server for structured reasoning
 │   ├── src/reasoning_mcp/  # Server: ensemble, invoke, perturb, synthesize,
 │   │                       #   depth_probe, plan_prompt, pause, surface, audit_probe
@@ -161,7 +179,7 @@ Similar approaches exist:
 - [Prompt Decorators](https://arxiv.org/abs/2510.19850) — academic work on composable control tokens
 - [DSPy](https://github.com/stanfordnlp/dspy) — full programming model for LLM pipelines
 
-Those are more ambitious. This is smaller: hashtags that stack in a Claude Code session. No config files, no build step.
+Those are more ambitious. This is smaller: hashtags that stack in a Claude Code session.
 
 ## License
 
