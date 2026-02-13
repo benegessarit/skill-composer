@@ -222,8 +222,8 @@ skills-system/
 ├── README.md
 ├── db/
 │   ├── connection.py                      # open_db() context manager, WAL, auto-schema
-│   ├── event.py                           # emit_event + query helpers
-│   └── models.py                          # LifeEvent Pydantic model
+│   ├── event.py                           # emit_event (append-only)
+│   └── models.py                          # LifeEvent dataclass
 ├── hooks/
 │   ├── promptsubmit/
 │   │   ├── runner.py                      # Entry point (stdin JSON → phases → stdout)
@@ -253,6 +253,5 @@ skills-system/
 
 - Python 3.11
 - SQLite 3 (WAL mode)
-- pydantic (LifeEvent model)
 - pyyaml (step frontmatter parsing)
 - openai (skill_queue_flush LLM calls — optional, graceful degradation without API key)

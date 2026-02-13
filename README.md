@@ -135,7 +135,38 @@ claude mcp add reasoning-mcp -- python -m reasoning_mcp
 
 Without reasoning-mcp installed, deep variants fall back to inline probing—still useful, just less rigorous.
 
-## Repository Structure
+## Components
+
+### skills/ + hooks/ — Use This
+
+Copy skills and hook. Works immediately. No dependencies. See Quick Start above.
+
+### reasoning-mcp/ — Optional Depth
+
+MCP server for metacognitive tools (depth_probe, ensemble, plan_prompt, etc.). Works standalone. Single dependency: `mcp>=1.0.0`.
+
+```bash
+pip install ./reasoning-mcp          # or: pip install reasoning-mcp[test]
+claude mcp add reasoning-mcp -- python -m reasoning_mcp
+```
+
+Full tool documentation, parameters, and examples: **[reasoning-mcp/README.md](reasoning-mcp/README.md)**
+
+### skills-system/ — Build Your Own
+
+Reference implementation showing how to add infrastructure around skills. Not required to use skill-composer — it shows one way to build observability and enforcement.
+
+What it demonstrates:
+
+- **SQLite span tracking** — per-invocation execution state machine (active → suspended → completed)
+- **Step dependency DAG** — blocks out-of-order step reads via `consumes`/`produces` YAML frontmatter
+- **Hook pipeline** — 7 hooks across 4 lifecycle events (PromptSubmit, PreToolUse, PostToolUse, SessionEnd)
+- **SkillRun output management** — structured directories for multi-agent skills
+- **Worker resume** — resume paused workers across sessions via `claude --continue`
+
+Architecture, schema, state machine diagrams: **[skills-system/README.md](skills-system/README.md)**
+
+### Repository Structure
 
 ```
 skill-composer/
@@ -150,26 +181,16 @@ skill-composer/
 │   └── promptsubmit/       # Mode composition engine
 │       └── phases/prompt_optimizer.py
 ├── reasoning-mcp/          # MCP server for structured reasoning
-│   ├── src/reasoning_mcp/  # Server: ensemble, invoke, perturb, synthesize,
+│   ├── src/reasoning_mcp/  # 9 tools: ensemble, invoke, perturb, synthesize,
 │   │                       #   depth_probe, plan_prompt, pause, surface, audit_probe
-│   ├── tests/              # Test suite (59 tests)
-│   └── pyproject.toml      # Dependencies: mcp>=1.0.0
-└── skills-system/          # Skills infrastructure (reference implementation)
-    ├── db/                 # SQLite skill tracking (open_db context manager)
-    ├── hooks/              # Full hook pipeline (step tracking, enforcement)
+│   ├── tests/              # 59 tests
+│   └── pyproject.toml      # Deps: mcp>=1.0.0
+└── skills-system/          # Reference implementation (see skills-system/README.md)
+    ├── db/                 # SQLite: span tracking + event ledger
+    ├── hooks/              # 7 hooks across 4 lifecycle events
     ├── utils/              # SkillRun output management
     └── workers/            # Worker resume via --continue
 ```
-
-### Component Independence
-
-| Component | Standalone? | Dependencies |
-|-----------|------------|--------------|
-| `skills/` + `hooks/` | Yes | None — copy skills and hook, works immediately |
-| `reasoning-mcp/` | Yes | `mcp>=1.0.0` only |
-| `skills-system/` | Reference | Shows how to build span tracking, step enforcement, output management |
-
-The `skills/` and `hooks/` directories are all you need. `reasoning-mcp` adds depth probing. `skills-system` is a reference implementation showing how to build infrastructure around skills.
 
 ## Related Work
 
