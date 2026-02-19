@@ -237,7 +237,7 @@ def _compose_with_modes(
         resolved = _hashtag_to_action_skill(h)
         if resolved:
             skill_name, is_deep = resolved
-            action_lines.append(f"- {skill_name}: ~/.claude/skills/{skill_name}/SKILL.md")
+            action_lines.append(f"- {skill_name}: {SKILLS_DIR / skill_name / 'SKILL.md'}")
             if is_deep:
                 has_deep = True
 
@@ -246,7 +246,7 @@ def _compose_with_modes(
     for h in context_hashtags:
         skill_name = _hashtag_to_context_skill(h)
         if skill_name:
-            context_lines.append(f"- {skill_name}: ~/.claude/skills/{skill_name}/SKILL.md")
+            context_lines.append(f"- {skill_name}: {SKILLS_DIR / skill_name / 'SKILL.md'}")
 
     # Build output
     result = base_content + f"\n\n<input>\n{question}\n</input>\n"
@@ -277,7 +277,7 @@ def _compose_multi_skill(skill_names: list[str], question: str) -> str | None:
         return None
 
     skill_lines = "\n".join(
-        f"- {s}: ~/.claude/skills/{s}/SKILL.md"
+        f"- {s}: {SKILLS_DIR / s / 'SKILL.md'}"
         for s in skill_names
     )
 

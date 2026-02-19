@@ -27,22 +27,31 @@ The stacking idea comes from CSS (classes compose) and Unix pipes (small tools c
 ```bash
 # Clone the repo
 git clone https://github.com/benegessarit/skill-composer.git
+cd skill-composer
 
 # Copy skills to Claude Code
-cp -r skill-composer/skills/* ~/.claude/skills/
+mkdir -p ~/.claude/skills/
+cp -r skills/* ~/.claude/skills/
 
 # Add the hook to your project's .claude/settings.json
-cat <<'EOF' >> .claude/settings.json
+# If .claude/settings.json doesn't exist yet:
+mkdir -p .claude
+cat <<'EOF' > .claude/settings.json
 {
   "hooks": {
     "UserPromptSubmit": [{
       "type": "command",
-      "command": "python3 /path/to/skill-composer/hooks/promptsubmit/runner.py",
+      "command": "python3 SKILL_COMPOSER_PATH/hooks/promptsubmit/runner.py",
       "timeout": 5000
     }]
   }
 }
 EOF
+# Replace SKILL_COMPOSER_PATH with the absolute path to your clone
+# (e.g., /Users/you/skill-composer)
+
+# If .claude/settings.json already exists, add the UserPromptSubmit
+# entry to the existing "hooks" object — don't append a new JSON root.
 
 # Use it
 #pref Should I use Redis or Postgres for this cache?
